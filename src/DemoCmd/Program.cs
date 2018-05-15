@@ -10,9 +10,11 @@ namespace DemoCmd
         {
             string gtxFilePath = @"C:\VDatum\ALFLgom02_8301\mllw.gtx";
             GtxFile gtxFile = new GtxFileParser().Parse(gtxFilePath);
-            gtxFile.ToCsv("mllw.csv");
+            //gtxFile.ToCsv("mllw.csv");
 
-            double result = gtxFile.getHeightFromCsv("mllw.csv", 272.461, 29.675);//-0.1981
+            float result = gtxFile.GetHeight(29.675, 272.461);//-0.1981
+            
+
         }
     }
     
@@ -69,11 +71,11 @@ namespace DemoCmd
             double[] columnHeaderValues = Array.ConvertAll(columnHeader.Split(separators,StringSplitOptions.RemoveEmptyEntries),Double.Parse);
 
             //Check if latitude is in range; calculate column index
-            bool inRange = (latitude >= columnHeaderValues[0] && latitude <= columnHeaderValues[columnHeaderValues.Length]);
+            bool inRange = (longitude >= columnHeaderValues[0] && longitude <= columnHeaderValues[columnHeaderValues.Length]);
             if (!inRange)
                 return nullReturnValue;
             
-            int valueColumnIndex = (int)((latitude - columnHeaderValues[0]) / gtxFile.DeltaLatitudeDecimalDegrees);
+            int valueColumnIndex = (int)((longitude - columnHeaderValues[0]) / gtxFile.DeltaLatitudeDecimalDegrees);
             double nearestColumnValue = columnHeaderValues[0] + (valueColumnIndex * gtxFile.DeltaLatitudeDecimalDegrees);
 
             //Get second row; split, covert to double[]; get header value
@@ -82,12 +84,12 @@ namespace DemoCmd
             double rowHeaderValue = rowValues[0];
 
             //Check if longitude value is potentially in the range
-            inRange = (longitude >= rowHeaderValue);
+            inRange = (latitude >= rowHeaderValue);
             if (!inRange)
                 return nullReturnValue;
 
             //calculate index value for matching row header value
-            int valueRowIndex = (int)((longitude - rowValues[0]) / gtxFile.DeltaLongitudeDecimalDegrees);
+            int valueRowIndex = (int)((latitude - rowValues[0]) / gtxFile.DeltaLongitudeDecimalDegrees);
             double nearestRowValue = rowValues[0] + (valueRowIndex * gtxFile.DeltaLongitudeDecimalDegrees);
 
             //get to row with value
