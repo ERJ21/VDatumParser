@@ -1,4 +1,6 @@
-﻿namespace VDatumParser
+﻿using System;
+
+namespace VDatumParser
 {
     public class GtxFile
     {
@@ -32,19 +34,30 @@
 
         public float GetHeight(double latitude, double longitude)
         {
-            float nullReturnValue = -88.8888f;
+            float nullReturnValue = 1f;
 
-            bool latitudeInRange = (latitude >= LowerLeftLatitudeDecimalDegrees && latitude <= (LowerLeftLatitudeDecimalDegrees + DeltaLatitudeDecimalDegrees * (NumberOfRows-2)));
-            bool longitudeInRange = (longitude >= LowerLeftLongitudeDecimalDegrees && longitude <= (LowerLeftLongitudeDecimalDegrees + DeltaLongitudeDecimalDegrees * (NumberOfColumns-2)));
+            double lowLatitudeBounds = Round(LowerLeftLatitudeDecimalDegrees,3);
+            double highLatitudeBounds = Round(LowerLeftLatitudeDecimalDegrees + DeltaLatitudeDecimalDegrees * (NumberOfRows - 1),3);
+            double lowLongitudeBounds = Round(LowerLeftLongitudeDecimalDegrees,3);
+            double highLongitudeBounds = Round(LowerLeftLongitudeDecimalDegrees + DeltaLongitudeDecimalDegrees * (NumberOfColumns - 1),3);
+
+            bool latitudeInRange = (latitude >= lowLatitudeBounds && latitude <= highLatitudeBounds);
+            bool longitudeInRange = (longitude >= lowLongitudeBounds && longitude <= highLongitudeBounds);
             if (!(latitudeInRange && longitudeInRange))
                 return nullReturnValue;
 
-            int rowIndex = (int)(((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees) + 1);
-            int colIndex = (int)(((longitude - LowerLeftLongitudeDecimalDegrees) / DeltaLongitudeDecimalDegrees) + 1);
+            int rowIndex = (int)Math.Round(((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees));
+            int colIndex = (int)Math.Round(((longitude - LowerLeftLongitudeDecimalDegrees) / DeltaLongitudeDecimalDegrees) + 1);
 
             int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
+            float height = Heights[singleArrayIndex - 1];
 
-            return Heights[singleArrayIndex];
+            return height;
+        }
+
+        private static double Round(double number, int places)
+        {
+            return Math.Round(number * Math.Pow(10, places)) / Math.Pow(10, places);
         }
     }
 }

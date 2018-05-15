@@ -23,7 +23,7 @@ namespace DemoCmd
     {
         public static void ToCsv(this GtxFile gtxFile, string filePath)
         {
-            using (var streamWriter = new StreamWriter(filePath))
+            using (var streamWriter = new StreamWriter(filePath)) 
             {
                 //very first entry is null
 
