@@ -37,16 +37,16 @@ namespace VDatumParser
             float nullReturnValue = 1f;
 
             double lowLatitudeBounds = Round(LowerLeftLatitudeDecimalDegrees,3);
-            double highLatitudeBounds = Round(LowerLeftLatitudeDecimalDegrees + DeltaLatitudeDecimalDegrees * (NumberOfRows - 1),3);
+            double highLatitudeBounds = Round(LowerLeftLatitudeDecimalDegrees + DeltaLatitudeDecimalDegrees * (NumberOfRows - 2),3);
             double lowLongitudeBounds = Round(LowerLeftLongitudeDecimalDegrees,3);
-            double highLongitudeBounds = Round(LowerLeftLongitudeDecimalDegrees + DeltaLongitudeDecimalDegrees * (NumberOfColumns - 1),3);
+            double highLongitudeBounds = Round(LowerLeftLongitudeDecimalDegrees + DeltaLongitudeDecimalDegrees * (NumberOfColumns - 2),3);
 
             bool latitudeInRange = (latitude >= lowLatitudeBounds && latitude <= highLatitudeBounds);
             bool longitudeInRange = (longitude >= lowLongitudeBounds && longitude <= highLongitudeBounds);
             if (!(latitudeInRange && longitudeInRange))
                 return nullReturnValue;
 
-            int rowIndex = (int)Math.Round(((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees));
+            int rowIndex = (int)Math.Round(((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees) + 1);
             int colIndex = (int)Math.Round(((longitude - LowerLeftLongitudeDecimalDegrees) / DeltaLongitudeDecimalDegrees) + 1);
 
             int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
@@ -59,5 +59,6 @@ namespace VDatumParser
         {
             return Math.Round(number * Math.Pow(10, places)) / Math.Pow(10, places);
         }
+
     }
 }
