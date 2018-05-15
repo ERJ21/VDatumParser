@@ -63,10 +63,10 @@ namespace DemoCmd
             //Read first line (column headers/latitude)
             string columnHeader = stringReader.ReadLine();
 
-            //Split column header with "," delimiter; convert to double[]
+            //Split column headers, convert to double[]
             double[] columnHeaderValues = Array.ConvertAll(columnHeader.Split(separators,StringSplitOptions.RemoveEmptyEntries),Double.Parse);
 
-            //Find passed latitude in column header values
+            //Check if latitude is in range; calculate column index
             bool inRange = (latitude >= columnHeaderValues[0] && latitude <= columnHeaderValues[columnHeaderValues.Length]);
             if (!inRange)
                 return nullReturnValue;
@@ -74,11 +74,9 @@ namespace DemoCmd
             int valueColumnIndex = (int)((latitude - columnHeaderValues[0]) / gtxFile.DeltaLatitudeDecimalDegrees);
             double nearestColumnValue = columnHeaderValues[0] + (valueColumnIndex * gtxFile.DeltaLatitudeDecimalDegrees);
 
-            //Get second row
+            //Get second row; split, covert to double[]; get header value
             string rowString = stringReader.ReadLine();
-            //Split row with "," delimiter, convert to double[]
             double[] rowValues = Array.ConvertAll(rowString.Split(separators, StringSplitOptions.None), Double.Parse);
-            //Get header value (longitude)
             double rowHeaderValue = rowValues[0];
 
             //Check if longitude value is potentially in the range
@@ -94,11 +92,9 @@ namespace DemoCmd
             for (int i = 0; i < valueRowIndex; i++)
                 rowString = stringReader.ReadLine();
 
-            //Split row with "," delimiter, convert to double[]
+            //Split row, convert to double[]; get height value; return value
             rowValues = Array.ConvertAll(rowString.Split(separators, StringSplitOptions.None), Double.Parse);
-            //Get height value
             double heightValue = rowValues[valueColumnIndex + 1];
-
             return heightValue;
         }
     }
