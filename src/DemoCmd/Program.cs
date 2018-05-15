@@ -11,6 +11,8 @@ namespace DemoCmd
             string gtxFilePath = @"C:\VDatum\ALFLgom02_8301\mllw.gtx";
             GtxFile gtxFile = new GtxFileParser().Parse(gtxFilePath);
             gtxFile.ToCsv("mllw.csv");
+
+            double result = gtxFile.getHeightFromCsv("mllw.csv", 272.461, 29.675);//-0.1981
         }
     }
     
