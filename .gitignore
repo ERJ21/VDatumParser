@@ -1,1 +1,3 @@
-src/
+src/.vs/
+src/DemoCmd/obj/Debug/
+src/VDatumParser/obj/Debug/
