@@ -29,5 +29,14 @@ namespace VDatumParser.Tests
             float expected = -0.2009f;
             Assert.Equal(expected, gtxFileTestObject.GetHeight(latitude, longitude));
         }
+
+        [Fact]
+        public void GetHeightInterpolateReturnValueAtPoint()
+        {
+            double latitude = 29.6535;
+            double longitude = 270.0025;
+            float expected = -0.200825f;
+            Assert.Equal(expected, gtxFileTestObject.GetHeight(latitude, longitude));
+        }
     }
 }

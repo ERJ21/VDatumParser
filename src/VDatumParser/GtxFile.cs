@@ -47,17 +47,21 @@ namespace VDatumParser
             if (!(latitudeInRange && longitudeInRange))
                 return nullReturnValue;
 
-            if (latitude % DeltaLatitudeDecimalDegrees == 0 && longitude % DeltaLongitudeDecimalDegrees == 0)
+            double c;
+            bool latitudeMultipleOfDelta = (c = RoundToDecimal(latitude % DeltaLatitudeDecimalDegrees, 10) % DeltaLatitudeDecimalDegrees)== 0;
+            bool longitudeMultipleOfDelta = (c = RoundToDecimal(longitude % DeltaLongitudeDecimalDegrees, 10) % DeltaLongitudeDecimalDegrees) == 0;
+
+            if (latitudeMultipleOfDelta&&longitudeMultipleOfDelta)
             {
-            int rowIndex = (int)((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees) + 1;
-            int colIndex = (int)((longitude - LowerLeftLongitudeDecimalDegrees) / DeltaLongitudeDecimalDegrees) + 1;
+                int rowIndex = (int)Math.Round(((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees) + 1);
+                int colIndex = (int)Math.Round(((longitude - LowerLeftLongitudeDecimalDegrees) / DeltaLongitudeDecimalDegrees) + 1);
 
-            int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
-            float height = Heights[singleArrayIndex - 1];
+                int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
+                float height = Heights[singleArrayIndex - 1];
 
-            return height;
+                return height;
             }
-            else if(latitude % DeltaLatitudeDecimalDegrees == 0)
+            else if(latitudeMultipleOfDelta)
             {
                 double highLongitude = TruncateToDecimal(longitude + DeltaLongitudeDecimalDegrees,3);
                 double lowLongitude = TruncateToDecimal(longitude, 3);
@@ -72,7 +76,7 @@ namespace VDatumParser
 
                 return weightedAverageHeight;
             }
-            else if(longitude % DeltaLongitudeDecimalDegrees == 0)
+            else if(longitudeMultipleOfDelta)
             {
                 double highLatitude = TruncateToDecimal(latitude + DeltaLatitudeDecimalDegrees, 3);
                 double lowLatitude = TruncateToDecimal(latitude, 3);
