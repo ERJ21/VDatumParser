@@ -41,12 +41,12 @@ namespace VDatumParser
         public decimal GetHeight(decimal latitude, decimal longitude)
         {
             decimal nullReturnValue = 1;
-            //convert floats to decimal for accuracy
+
+            //convert doubles/floats to decimal for accuracy
             decimal lowerLatitude = (decimal)LowerLeftLatitudeDecimalDegrees;
             decimal lowerLongitude = (decimal)LowerLeftLongitudeDecimalDegrees;
             decimal latitudeDelta = (decimal)DeltaLatitudeDecimalDegrees;
             decimal longitudeDelta = (decimal)DeltaLongitudeDecimalDegrees;
-
 
             //Find higher coordinate bounds of gtx file
             decimal higherLatitude = lowerLatitude + latitudeDelta * ((decimal)NumberOfRows - 2);
@@ -59,11 +59,11 @@ namespace VDatumParser
                 return nullReturnValue;
 
             //Check if passed values are multiples of delta
-            bool latitudeMultipleOfDelta = (latitude % latitudeDelta)== 0;
+            bool latitudeMultipleOfDelta = (latitude % latitudeDelta) == 0;
             bool longitudeMultipleOfDelta = (longitude % longitudeDelta) == 0;
 
             //If values are multiples, find exact data
-            if (latitudeMultipleOfDelta&&longitudeMultipleOfDelta)
+            if (latitudeMultipleOfDelta && longitudeMultipleOfDelta)
             {
                 //Find row and column indeces of represented data
                 int rowIndex = (int)((latitude - lowerLatitude) / latitudeDelta) + 1;
@@ -72,16 +72,14 @@ namespace VDatumParser
                 //Find index of represented data in single array
                 int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
 
-                //Find height in single array
-                float height = Heights[singleArrayIndex - 1];
-
-                return (decimal)height;
+                //Find and return height in single array
+                return (decimal)Heights[singleArrayIndex - 1];
             }
             //If latitude is multiple, interpolate longitudes
-            else if(latitudeMultipleOfDelta)
+            else if (latitudeMultipleOfDelta)
             {
                 //Find nearest represented values in data
-                decimal highLongitude = TruncateToDecimal(longitude + longitudeDelta,3);
+                decimal highLongitude = TruncateToDecimal(longitude + longitudeDelta, 3);
                 decimal lowLongitude = TruncateToDecimal(longitude, 3);
 
                 //Find weights of eahc value based on proximity
@@ -98,7 +96,7 @@ namespace VDatumParser
                 return weightedAverageHeight;
             }
             //If longitude is multiple, interpolate latitude
-            else if(longitudeMultipleOfDelta)
+            else if (longitudeMultipleOfDelta)
             {
                 //Find nearest represented values in data
                 decimal highLatitude = TruncateToDecimal(latitude + latitudeDelta, 3);
@@ -134,25 +132,25 @@ namespace VDatumParser
                 decimal lowLongitudeWeight = ((longitudeDelta - (longitude % longitudeDelta)) * 10) / longitudeDelta;
 
                 //Find heights of represented values in data
-                decimal highLatitudeLowLongitudeHeight = GetHeight(highLatitude, lowLongitude);
-                decimal lowLatitudeLowLongitudeHeight = GetHeight(lowLatitude, lowLongitude);
+                decimal highLatLowLongHeight = GetHeight(highLatitude, lowLongitude);
+                decimal lowLatLowLongHeight = GetHeight(lowLatitude, lowLongitude);
 
-                decimal highLatitudeHighLongitudeHeight = GetHeight(highLatitude, highLongitude);
-                decimal lowLatitudeHighLongitudeHeight = GetHeight(lowLatitude, highLongitude);
-
-                //Weight heights and find the average
-                decimal weightedAverageLowLongitudeHeight = (highLatitudeLowLongitudeHeight * highLatitudeWeight + lowLatitudeLowLongitudeHeight * lowLatitudeWeight) / (highLatitudeWeight + lowLatitudeWeight);
-                decimal weightedAverageHighLongitudeHeight = (highLatitudeHighLongitudeHeight * highLatitudeWeight + lowLatitudeHighLongitudeHeight * highLatitudeWeight) / (highLatitudeWeight + lowLatitudeWeight);
+                decimal highLatHighLongHeight = GetHeight(highLatitude, highLongitude);
+                decimal lowLatHighLongHeight = GetHeight(lowLatitude, highLongitude);
 
                 //Weight heights and find the average
-                decimal weightedAverageHeight = (weightedAverageLowLongitudeHeight * lowLongitudeWeight + weightedAverageHighLongitudeHeight * highLongitudeWeight) / (lowLongitudeWeight + highLongitudeWeight);
-                
+                decimal weightedAvgLowLongHeight = (highLatLowLongHeight * highLatitudeWeight + lowLatLowLongHeight * lowLatitudeWeight) / (highLatitudeWeight + lowLatitudeWeight);
+                decimal weightedAvgHighLongHeight = (highLatHighLongHeight * highLatitudeWeight + lowLatHighLongHeight * highLatitudeWeight) / (highLatitudeWeight + lowLatitudeWeight);
+
+                //Weight heights and find the average
+                decimal weightedAverageHeight = (weightedAvgLowLongHeight * lowLongitudeWeight + weightedAvgHighLongHeight * highLongitudeWeight) / (lowLongitudeWeight + highLongitudeWeight);
+
                 return weightedAverageHeight;
             }
         }
 
         /// <summary>
-        /// Truncates double to expressed numnber of decimal places
+        /// Truncates decimal to expressed number of decimal places
         /// </summary>
         /// <param name="number"></param>
         /// <param name="places"></param>

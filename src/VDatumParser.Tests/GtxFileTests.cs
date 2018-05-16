@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using VDatumParser;
-
+﻿using Xunit;
 
 namespace VDatumParser.Tests
 {
@@ -31,7 +24,7 @@ namespace VDatumParser.Tests
         }
 
         [Fact]
-        public void GetHeightInterpolateReturnValueAtPoint()
+        public void GetHeightInterpolateValueAtPoint()
         {
             decimal latitude = 29.6535M;
             decimal longitude = 270.0025M;
@@ -40,7 +33,7 @@ namespace VDatumParser.Tests
         }
 
         [Fact]
-        public void GetHeightInterpolateReturnValueAtPoint2()
+        public void GetHeightInterpolateValueAtPoint2()
         {
             decimal latitude = 29.6525M;
             decimal longitude = 270.0012M;
