@@ -36,29 +36,92 @@ namespace VDatumParser
         {
             float nullReturnValue = 1f;
 
-            double lowLatitudeBounds = Round(LowerLeftLatitudeDecimalDegrees,3);
-            double highLatitudeBounds = Round(LowerLeftLatitudeDecimalDegrees + DeltaLatitudeDecimalDegrees * (NumberOfRows - 2),3);
-            double lowLongitudeBounds = Round(LowerLeftLongitudeDecimalDegrees,3);
-            double highLongitudeBounds = Round(LowerLeftLongitudeDecimalDegrees + DeltaLongitudeDecimalDegrees * (NumberOfColumns - 2),3);
+
+            double lowLatitudeBounds = RoundToDecimal(LowerLeftLatitudeDecimalDegrees, 3);
+            double highLatitudeBounds = RoundToDecimal(LowerLeftLatitudeDecimalDegrees + DeltaLatitudeDecimalDegrees * (NumberOfRows - 2), 3);
+            double lowLongitudeBounds = RoundToDecimal(LowerLeftLongitudeDecimalDegrees, 3);
+            double highLongitudeBounds = RoundToDecimal(LowerLeftLongitudeDecimalDegrees + DeltaLongitudeDecimalDegrees * (NumberOfColumns - 2), 3);
 
             bool latitudeInRange = (latitude >= lowLatitudeBounds && latitude <= highLatitudeBounds);
             bool longitudeInRange = (longitude >= lowLongitudeBounds && longitude <= highLongitudeBounds);
             if (!(latitudeInRange && longitudeInRange))
                 return nullReturnValue;
 
-            int rowIndex = (int)Math.Round(((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees) + 1);
-            int colIndex = (int)Math.Round(((longitude - LowerLeftLongitudeDecimalDegrees) / DeltaLongitudeDecimalDegrees) + 1);
+            if (latitude % DeltaLatitudeDecimalDegrees == 0 && longitude % DeltaLongitudeDecimalDegrees == 0)
+            {
+            int rowIndex = (int)((latitude - LowerLeftLatitudeDecimalDegrees) / DeltaLatitudeDecimalDegrees) + 1;
+            int colIndex = (int)((longitude - LowerLeftLongitudeDecimalDegrees) / DeltaLongitudeDecimalDegrees) + 1;
 
             int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
             float height = Heights[singleArrayIndex - 1];
 
             return height;
+            }
+            else if(latitude % DeltaLatitudeDecimalDegrees == 0)
+            {
+                double highLongitude = TruncateToDecimal(longitude + DeltaLongitudeDecimalDegrees,3);
+                double lowLongitude = TruncateToDecimal(longitude, 3);
+
+                float highLongitudeWeight = (float)(((longitude % DeltaLongitudeDecimalDegrees) * 10) / DeltaLongitudeDecimalDegrees);
+                float lowLongitudeWeight = (float)(((DeltaLongitudeDecimalDegrees - (longitude % DeltaLongitudeDecimalDegrees)) * 10) / DeltaLongitudeDecimalDegrees);
+
+                float highHeight = GetHeight(latitude, highLongitude);
+                float lowHeight = GetHeight(latitude, lowLongitude);
+
+                float weightedAverageHeight = (highLongitudeWeight * highHeight + lowLongitudeWeight * lowHeight) / (highLongitudeWeight + lowLongitudeWeight);
+
+                return weightedAverageHeight;
+            }
+            else if(longitude % DeltaLongitudeDecimalDegrees == 0)
+            {
+                double highLatitude = TruncateToDecimal(latitude + DeltaLatitudeDecimalDegrees, 3);
+                double lowLatitude = TruncateToDecimal(latitude, 3);
+
+                float highLatitudeWeight = (float)(((latitude % DeltaLatitudeDecimalDegrees) * 10) / DeltaLatitudeDecimalDegrees);
+                float lowLatitudeWeight = (float)(((DeltaLatitudeDecimalDegrees - (latitude % DeltaLatitudeDecimalDegrees)) * 10) / DeltaLatitudeDecimalDegrees);
+
+                float highHeight = GetHeight(highLatitude, longitude);
+                float lowHeight = GetHeight(lowLatitude, longitude);
+
+                float weightedAverageHeight = (highLatitudeWeight * highHeight + lowLatitudeWeight * lowHeight) / (highLatitudeWeight + lowLatitudeWeight);
+
+                return weightedAverageHeight;
+            }
+            else
+            {
+                double highLatitude = TruncateToDecimal(latitude + DeltaLatitudeDecimalDegrees, 3);
+                double lowLatitude = TruncateToDecimal(latitude, 3);
+                double highLongitude = TruncateToDecimal(longitude + DeltaLongitudeDecimalDegrees, 3);
+                double lowLongitude = TruncateToDecimal(longitude, 3);
+
+                float highLatitudeWeight = (float)(((latitude % DeltaLatitudeDecimalDegrees) * 10) / DeltaLatitudeDecimalDegrees);
+                float lowLatitudeWeight = (float)(((DeltaLatitudeDecimalDegrees - (latitude % DeltaLatitudeDecimalDegrees)) * 10) / DeltaLatitudeDecimalDegrees);
+                float highLongitudeWeight = (float)(((longitude % DeltaLongitudeDecimalDegrees) * 10) / DeltaLongitudeDecimalDegrees);
+                float lowLongitudeWeight = (float)(((DeltaLongitudeDecimalDegrees - (longitude % DeltaLongitudeDecimalDegrees)) * 10) / DeltaLongitudeDecimalDegrees);
+
+                float highLatitudeLowLongitudeHeight = GetHeight(highLatitude, lowLongitude);
+                float lowLatitudeLowLongitudeHeight = GetHeight(lowLatitude, lowLongitude);
+
+                float highLatitudeHighLongitudeHeight = GetHeight(highLatitude, highLongitude);
+                float lowLatitudeHighLongitudeHeight = GetHeight(lowLatitude, highLongitude);
+
+                float weightedAverageLowLongitudeHeight = (highLatitudeLowLongitudeHeight * highLatitudeWeight + lowLatitudeLowLongitudeHeight * lowLatitudeWeight) / (highLatitudeWeight + lowLatitudeWeight);
+                float weightedAverageHighLongitudeHeight = (highLatitudeHighLongitudeHeight * highLatitudeWeight + lowLatitudeHighLongitudeHeight * highLatitudeWeight) / (highLatitudeWeight + lowLatitudeWeight);
+
+                float weightedAverageHeight = (weightedAverageLowLongitudeHeight * lowLongitudeWeight + weightedAverageHighLongitudeHeight * highLongitudeWeight) / (lowLongitudeWeight + highLongitudeWeight);
+                
+                return weightedAverageHeight;
+            }
         }
 
-        private static double Round(double number, int places)
+        private static double RoundToDecimal(double number, int places)
         {
             return Math.Round(number * Math.Pow(10, places)) / Math.Pow(10, places);
         }
 
+        private static double TruncateToDecimal(double number, int places)
+        {
+            return Math.Truncate(number * Math.Pow(10, places)) / Math.Pow(10, places);
+        }
     }
 }
