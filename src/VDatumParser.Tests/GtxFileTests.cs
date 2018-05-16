@@ -24,19 +24,28 @@ namespace VDatumParser.Tests
         [Fact]
         public void GetHeightReturnValueAtPoint()
         {
-            double latitude = 29.653;
-            double longitude = 270.002;
-            float expected = -0.2009f;
-            Assert.Equal(expected, gtxFileTestObject.GetHeight(latitude, longitude));
+            decimal latitude = 29.653M;
+            decimal longitude = 270.002M;
+            decimal expected = -0.2009M;
+            Assert.Equal(expected.ToString(), gtxFileTestObject.GetHeight(latitude, longitude).ToString());
         }
 
         [Fact]
         public void GetHeightInterpolateReturnValueAtPoint()
         {
-            double latitude = 29.6535;
-            double longitude = 270.0025;
-            float expected = -0.200825f;
-            Assert.Equal(expected, gtxFileTestObject.GetHeight(latitude, longitude));
+            decimal latitude = 29.6535M;
+            decimal longitude = 270.0025M;
+            decimal expected = -0.200825M;
+            Assert.Equal(expected.ToString(), gtxFileTestObject.GetHeight(latitude, longitude).ToString());
+        }
+
+        [Fact]
+        public void GetHeightInterpolateReturnValueAtPoint2()
+        {
+            decimal latitude = 29.6525M;
+            decimal longitude = 270.0012M;
+            decimal expected = -0.20077M;
+            Assert.Equal(expected.ToString(), gtxFileTestObject.GetHeight(latitude, longitude).ToString());
         }
     }
 }
