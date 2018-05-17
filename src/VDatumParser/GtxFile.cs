@@ -66,14 +66,15 @@ namespace VDatumParser
             if (latitudeMultipleOfDelta && longitudeMultipleOfDelta)
             {
                 //Find row and column indeces of represented data
-                int rowIndex = (int)((latitude - lowerLatitude) / latitudeDelta) + 1;
-                int colIndex = (int)((longitude - lowerLongitude) / longitudeDelta) + 1;
+                int rowIndex = (int)((latitude - lowerLatitude) / latitudeDelta);
+                int colIndex = (int)((longitude - lowerLongitude) / longitudeDelta);
 
                 //Find index of represented data in single array
                 int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
 
                 //Find and return height in single array
-                return (decimal)Heights[singleArrayIndex - 1];
+                float height = Heights[singleArrayIndex];
+                return (decimal)height;
             }
             //If latitude is multiple, interpolate longitudes
             else if (latitudeMultipleOfDelta)
