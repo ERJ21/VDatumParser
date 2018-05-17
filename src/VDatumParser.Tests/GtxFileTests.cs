@@ -14,8 +14,11 @@ namespace VDatumParser.Tests
             /*29.655f,*/    -.2007f,    -.2007f,    -.2007f,    -.2007f,    -.2006f,    -.2006f,    -.2006f
             });
 
-        private static string gtxFilePath = @"C:\VDatum\ALFLgom02_8301\mllw.gtx";
-        private static GtxFile gtxFileTestObject2 = new GtxFileParser().Parse(gtxFilePath);
+        private static string gtxFilePathALFLgom = @"C:\VDatum\ALFLgom02_8301\mllw.gtx";
+        private static string gtxFilePathLAmobile = @"C:\\VDatum\LAmobile02_8301\mllw.gtx";
+        private static GtxFileParser parser = new GtxFileParser();
+        private static GtxFile gtxFileALFLgom = parser.Parse(gtxFilePathALFLgom);
+        private static GtxFile gtxFileLAmobile = parser.Parse(gtxFilePathLAmobile);
 
         [Theory]
         [InlineData(29.653, 270.002, -0.2009)] //Exact point data
@@ -32,9 +35,19 @@ namespace VDatumParser.Tests
         [InlineData(30.231,272.049,-0.2013)]//Exact point data
         [InlineData(29.795,272.0595,-0.20045)]//Interpolate halfway between two longitude points, exact latitude point
         [InlineData(29.7984,272.061,-0.20044)]//Interpolate partway between two latitude points, exact longitude
-        public void GetHeight_Theory_ReturnExpectedFromGtxFile(decimal latitude, decimal longitude, decimal expected)
+        
+        public void GetHeight_Theory_ReturnExpectedFromGtxFileALFLgom(decimal latitude, decimal longitude, decimal expected)
         {
-            Assert.Equal(expected.ToString(), gtxFileTestObject2.GetHeight(latitude, longitude).ToString());
+            Assert.Equal(expected.ToString(), gtxFileALFLgom.GetHeight(latitude, longitude).ToString());
+        }
+
+        [Theory]
+        [InlineData(30.2245, 271.955, -0.1829)]//Interpolate halfway between two latiude points, exact longitude
+        [InlineData(30.220,271.940,-0.1856)]//Exact point data
+        [InlineData(30.210,271.9305,-0.18845)]//Interpolate halfway between two longitude points, exact latitude
+        public void GetHeight_Theory_ReturnExpectedFromGtxFileLAmobile(decimal latitude, decimal longitude, decimal expected)
+        {
+            Assert.Equal(expected.ToString(), gtxFileLAmobile.GetHeight(latitude, longitude).ToString());
         }
     }
 }
