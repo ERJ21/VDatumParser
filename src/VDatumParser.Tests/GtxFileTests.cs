@@ -5,7 +5,7 @@ namespace VDatumParser.Tests
     public class GtxFileTests
     {
         private static GtxFile gtxFileTestObject = new GtxFile("fakePath", 29.650, 270.000, 0.001, 0.001, 6, 7, new float[]{
-                       //270.000f,   270.001f,   270.002f,   270.003f,   270.004f,   270.005f,   270.006f,
+                           //270.000f,   270.001f,   270.002f,   270.003f,   270.004f,   270.005f,   270.006f,
             /*29.650f,*/    -.2006f,    -.2006f,    -.2007f,    -.2006f,    -.2006f,    -.2006f,    -.2007f,
             /*29.651f,*/    -.2006f,    -.2007f,    -.2007f,    -.2007f,    -.2006f,    -.2006f,    -.2007f,
             /*29.652f,*/    -.2007f,    -.2007f,    -.2008f,    -.2007f,    -.2007f,    -.2006f,    -.2006f,
@@ -30,6 +30,8 @@ namespace VDatumParser.Tests
         [InlineData(30.182,272.094,-0.2)]//Exact point data
         [InlineData(30.1735,272.1315,-0.198775)]//Interpolate halfway between two longitude and latitude points
         [InlineData(30.231,272.049,-0.2013)]//Exact point data
+        [InlineData(29.795,272.0595,-0.20045)]//Interpolate halfway between two longitude points, exact latitude point
+        [InlineData(29.7984,272.061,-0.20044)]//Interpolate partway between two latitude points, exact longitude
         public void GetHeight_Theory_ReturnExpectedFromGtxFile(decimal latitude, decimal longitude, decimal expected)
         {
             Assert.Equal(expected.ToString(), gtxFileTestObject2.GetHeight(latitude, longitude).ToString());
