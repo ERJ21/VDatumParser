@@ -8,7 +8,7 @@ namespace DemoCmd
     {
         static void Main(string[] args)
         {
-            string gtxFilePath = @"C:\VDatum\ALFLgom02_8301\mllw.gtx";
+            string gtxFilePath = @"C:\VDatum\LAmobile02_8301\mllw.gtx";
             GtxFile gtxFile = new GtxFileParser().Parse(gtxFilePath);
             gtxFile.ToCsv("mllw.csv");
             

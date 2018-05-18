@@ -49,8 +49,8 @@ namespace VDatumParser
             decimal longitudeDelta = (decimal)DeltaLongitudeDecimalDegrees;
 
             //Find higher coordinate bounds of gtx file
-            decimal higherLatitude = lowerLatitude + latitudeDelta * ((decimal)NumberOfRows - 2);
-            decimal higherLongitude = lowerLongitude + longitudeDelta * ((decimal)NumberOfColumns - 2);
+            decimal higherLatitude = lowerLatitude + latitudeDelta * ((decimal)NumberOfRows - 1);
+            decimal higherLongitude = lowerLongitude + longitudeDelta * ((decimal)NumberOfColumns - 1);
 
             //Check if passed values are in range
             bool latitudeInRange = (latitude >= lowerLatitude && latitude <= higherLatitude);
