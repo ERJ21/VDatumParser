@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System;
 
 namespace VDatumParser
 {
@@ -37,7 +40,7 @@ namespace VDatumParser
                     deltaLongitudeDecimalDegrees: deltaLongitudeDecimalDegrees,
                     numberOfRows: numberOfRows,
                     numberOfColumns: numberOfColumns,
-                    heights: heights);
+                    heights: Array.AsReadOnly(heights));
             }
         }
     }

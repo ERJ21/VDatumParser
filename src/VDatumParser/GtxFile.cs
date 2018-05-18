@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 
 namespace VDatumParser
 {
     public class GtxFile
     {
-        public GtxFile(string filePath, double lowerLeftLatitudeDecimalDegrees, double lowerLeftLongitudeDecimalDegrees, double deltaLatitudeDecimalDegrees, double deltaLongitudeDecimalDegrees, int numberOfRows, int numberOfColumns, float[] heights)
+        public GtxFile(string filePath, double lowerLeftLatitudeDecimalDegrees, double lowerLeftLongitudeDecimalDegrees, double deltaLatitudeDecimalDegrees, double deltaLongitudeDecimalDegrees, int numberOfRows, int numberOfColumns, ReadOnlyCollection<float> heights)
         {
             FilePath = filePath;
             LowerLeftLatitudeDecimalDegrees = lowerLeftLatitudeDecimalDegrees;
@@ -30,7 +31,7 @@ namespace VDatumParser
 
         public int NumberOfColumns { get; }
 
-        public float[] Heights { get; }
+        public ReadOnlyCollection<float> Heights { get; }
 
         /// <summary>
         /// Finds height in gtx file for given latitude and longitude
