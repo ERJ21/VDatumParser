@@ -40,7 +40,7 @@ namespace VDatumParser.Tests
         [InlineData(29.653, 270.002, -0.2009)] //Exact point data
         [InlineData(29.6535, 270.0025, -0.200825)] //Interpolate halfway between two latitude points, exact longitude point
         [InlineData(29.6525, 270.0012, -0.20077)] //Interpolate partway between two longitude points, halfway between two longitude points
-        public void GetHeight_Theory_ReturnExpected(decimal latitude, decimal longitude, decimal expected)
+        public void GetHeight_Theory_ReturnExpected(double latitude, double longitude, double expected)
         {
             Assert.Equal(expected, gtxFileTestObject.GetHeight(latitude, longitude));
         }
@@ -49,7 +49,7 @@ namespace VDatumParser.Tests
         [InlineData(30.171,272.095,-0.2)]//Exact point data
         [InlineData(30.173,272.0955,-0.19995)]//Interpolate halfway between two longitude points, exact latitude
         
-        public void GetHeight_Theory_ReturnExpectedFromGtxFileALFLgom(decimal latitude, decimal longitude, decimal expected)
+        public void GetHeight_Theory_ReturnExpectedFromGtxFileALFLgom(double latitude, double longitude, double expected)
         {
             Assert.Equal(expected, gtxFileTestObjectALFL.GetHeight(latitude, longitude));
         }
@@ -58,7 +58,7 @@ namespace VDatumParser.Tests
         [InlineData(30.2245, 271.940, -0.18375)]//Interpolate halfway between two latiude points, exact longitude
         [InlineData(30.220,271.940,-0.1856)]//Exact point data
         [InlineData(30.225,271.9395,-0.1831)]//Interpolate halfway between two longitude points, exact latitude
-        public void GetHeight_Theory_ReturnExpectedFromGtxFileLAmobile(decimal latitude, decimal longitude, decimal expected)
+        public void GetHeight_Theory_ReturnExpectedFromGtxFileLAmobile(double latitude, double longitude, double expected)
         {
             Assert.Equal(expected.ToString(), gtxFileTestObjectLAmobile.GetHeight(latitude, longitude).ToString());
         }
