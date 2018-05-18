@@ -1,6 +1,4 @@
 ﻿using System.IO;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using System;
 
 namespace VDatumParser

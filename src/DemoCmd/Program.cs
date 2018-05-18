@@ -11,12 +11,8 @@ namespace DemoCmd
             string gtxFilePath = @"C:\VDatum\LAmobile02_8301\mllw.gtx";
             GtxFile gtxFile = new GtxFileParser().Parse(gtxFilePath);
             gtxFile.ToCsv("mllw.csv");
-            
-            
-
         }
     }
-    
 
     public static class GtxFileExtensions
     {
@@ -57,7 +53,7 @@ namespace DemoCmd
             }
         }
 
-        public static double getHeightFromCsv(this GtxFile gtxFile, string filePath, double latitude, double longitude)
+        public static double GetHeightFromCsv(this GtxFile gtxFile, string filePath, double latitude, double longitude)
         {
             StringReader stringReader = new StringReader(File.Open(filePath,FileMode.Open,FileAccess.Read,FileShare.ReadWrite).ToString());
             string[] separators = { "," };
