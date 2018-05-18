@@ -41,10 +41,10 @@ namespace VDatumParser
         public double GetHeight(double lat, double lon)
         {
             float nullReturnValue = 1f;
-        
+
             //Change significant figure of variables for accuracy
-            double lowerLatitude = Math.Round(LowerLeftLatitudeDecimalDegrees/DeltaLatitudeDecimalDegrees);
-            double lowerLongitude = Math.Round(LowerLeftLongitudeDecimalDegrees/DeltaLongitudeDecimalDegrees);
+            double lowerLatitude = Math.Round(LowerLeftLatitudeDecimalDegrees / DeltaLatitudeDecimalDegrees);
+            double lowerLongitude = Math.Round(LowerLeftLongitudeDecimalDegrees / DeltaLongitudeDecimalDegrees);
             double latitude = lat * 1000;
             double longitude = lon * 1000;
 
@@ -73,7 +73,8 @@ namespace VDatumParser
                 int singleArrayIndex = rowIndex * NumberOfColumns + colIndex;
 
                 //Find and return height in single array
-                return ConvertToDouble(Heights[singleArrayIndex]);
+                decimal temp = (decimal)Heights[singleArrayIndex];
+                return Convert.ToDouble(temp);
             }
             //If latitude is multiple, interpolate longitudes
             else if (latitudeMultipleOfDelta)
@@ -87,8 +88,8 @@ namespace VDatumParser
                 double lowLongitudeWeight = 10 - highLongitudeWeight;
 
                 //Find heights of represented values in data
-                double highHeight = 10000 * GetHeight(latitude /1000, highLongitude /1000);
-                double lowHeight = 10000 * GetHeight(latitude /1000, lowLongitude /1000);
+                double highHeight = 10000 * GetHeight(latitude / 1000, highLongitude / 1000);
+                double lowHeight = 10000 * GetHeight(latitude / 1000, lowLongitude / 1000);
 
                 //Weught heights and find the average
                 double weightedAverageHeight = (highLongitudeWeight * highHeight + lowLongitudeWeight * lowHeight) / (highLongitudeWeight + lowLongitudeWeight);
@@ -107,8 +108,8 @@ namespace VDatumParser
                 double lowLatitudeWeight = 10 - highLatitudeWeight;
 
                 //Find heights of represented values in data
-                double highLatitudeHeight = 10000 * GetHeight(highLatitude /1000, longitude /1000);
-                double lowLatitudeHeight = 10000 * GetHeight(lowLatitude /1000, longitude /1000);
+                double highLatitudeHeight = 10000 * GetHeight(highLatitude / 1000, longitude / 1000);
+                double lowLatitudeHeight = 10000 * GetHeight(lowLatitude / 1000, longitude / 1000);
 
                 //Weight heights and find the average
                 double weightedAverageHeight = (highLatitudeWeight * highLatitudeHeight + lowLatitudeWeight * lowLatitudeHeight) / (highLatitudeWeight + lowLatitudeWeight);
@@ -119,7 +120,7 @@ namespace VDatumParser
             else
             {
                 //Find nearest represented values in data
-                double highLatitude =Math.Truncate(latitude + 1);
+                double highLatitude = Math.Truncate(latitude + 1);
                 double lowLatitude = Math.Truncate(latitude);
                 double highLongitude = Math.Truncate(longitude + 1);
                 double lowLongitude = Math.Truncate(longitude);
@@ -132,11 +133,11 @@ namespace VDatumParser
                 double lowLongitudeWeight = 10 - highLongitudeWeight;
 
                 //Find heights of represented values in data
-                double highLatLowLongHeight = 10000*GetHeight(highLatitude/1000, lowLongitude/1000);
-                double lowLatLowLongHeight = 10000*GetHeight(lowLatitude/1000, lowLongitude /1000);
+                double highLatLowLongHeight = 10000 * GetHeight(highLatitude / 1000, lowLongitude / 1000);
+                double lowLatLowLongHeight = 10000 * GetHeight(lowLatitude / 1000, lowLongitude / 1000);
 
-                double highLatHighLongHeight = 10000*GetHeight(highLatitude/1000, highLongitude /1000);
-                double lowLatHighLongHeight = 10000*GetHeight(lowLatitude/1000, highLongitude /1000);
+                double highLatHighLongHeight = 10000 * GetHeight(highLatitude / 1000, highLongitude / 1000);
+                double lowLatHighLongHeight = 10000 * GetHeight(lowLatitude / 1000, highLongitude / 1000);
 
                 //Weight heights and find the average
                 double weightedAvgLowLongHeight = (highLatLowLongHeight * highLatitudeWeight + lowLatLowLongHeight * lowLatitudeWeight) / 10;
@@ -145,13 +146,8 @@ namespace VDatumParser
                 //Weight heights and find the average
                 double weightedAverageHeight = (weightedAvgLowLongHeight * lowLongitudeWeight + weightedAvgHighLongHeight * highLongitudeWeight) / (lowLongitudeWeight + highLongitudeWeight);
 
-                return weightedAverageHeight/10000;
+                return weightedAverageHeight / 10000;
             }
-        }
-        private static double ConvertToDouble(float f)
-        {
-            decimal temp = (decimal)f;
-            return Convert.ToDouble(temp);
         }
     }
 }
